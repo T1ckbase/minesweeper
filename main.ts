@@ -2,11 +2,13 @@ import { Hono } from 'hono';
 import { logger } from 'hono/logger';
 import { serveStatic } from 'hono/deno';
 
+// https://t1ckbase-minesweeper.hf.space
+
 const app = new Hono();
 
 app.use(logger());
 
-app.get('/', (c) => c.text('Hello'));
+app.get('/', (c) => c.text('Play minesweeper:\nhttps://github.com/T1ckbase\n\n' + Array.from(c.req.raw.headers).join('\n')));
 
 // app.get('*', serveStatic({ path: './gray.svg' }));
 app.get('*', (c) => {
