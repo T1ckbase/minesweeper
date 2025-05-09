@@ -91,7 +91,7 @@ export class Minesweeper {
       cell_revealed_8: '8.svg',
       mine_normal: 'mine.svg',
       mine_hit: 'mine-red.svg',
-      status_playing: 'emoji-smile.svg',
+      status_playing: 'emoji-surprise-smile.svg',
       status_won: 'emoji-sunglasses.svg',
       status_lost: 'emoji-dead.svg',
     };
