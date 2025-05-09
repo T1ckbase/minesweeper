@@ -1,7 +1,7 @@
 <svg width="39" height="23" viewBox="0 0 39 23" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
   <style>
     :root {
-      --count: 10;
+      --count: 0;
     }
 
     #digit-units {

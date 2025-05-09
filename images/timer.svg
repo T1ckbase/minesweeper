@@ -8,7 +8,7 @@
 
     :root {
       --second: 0;
-      animation: timer 1000s linear infinite -200s;
+      animation: timer 1000s linear infinite;
     }
 
     #digit-units {

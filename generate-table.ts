@@ -5,9 +5,9 @@ const baseUrl = 'https://t1ckbase-minesweeper.hf.space';
 const html = '<table id="toc">\n' +
   '  <tr>\n' +
   '    <td align="center">\n' +
-  `      <img src="${baseUrl}/mines/count" height="48px" />\n` +
+  `      <img src="${baseUrl}/mines/count" height="48px" align="left" />\n` +
   `      <a href="${baseUrl}/game/reset"><img src="${baseUrl}/game/status" width="48px" height="48px" /></a>\n` +
-  `      <img src="${baseUrl}/mines/count" height="48px" />\n` +
+  `      <img src="${baseUrl}/timer" height="48px" align="right" />\n` +
   '    </td>\n' +
   '  </tr>\n' +
   Array.from({ length: rows }, (_, r) =>

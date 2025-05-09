@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
 // import { logger } from 'hono/logger';
-import { serveStatic } from 'hono/deno';
 import { Minesweeper } from './minesweeper.ts';
 import { isGithubUserPath } from './utils.ts';
 
@@ -8,7 +7,8 @@ import { isGithubUserPath } from './utils.ts';
 
 const USER = 'T1ckbase';
 
-const minesweeper = new Minesweeper(8, 8, 10, './images');
+const MINE_COUNT = 10;
+const minesweeper = new Minesweeper(8, 8, MINE_COUNT, './images');
 
 const app = new Hono();
 
@@ -22,8 +22,6 @@ if (Deno.env.get('DENO_ENV') === 'development') {
   // app.get('/board', (c) => c.text(JSON.stringify(minesweeper.getBoard(), null, 2)));
   app.get('/board', (c) => c.text(minesweeper.getBoard().map((row) => row.map((cell) => cell.isMine ? 'b' : cell.adjacentMines).join('')).join('\n')));
 }
-
-app.use('/mines/count', serveStatic({ path: './images/counter.svg' }));
 
 app.get('/cell/:row/:col/image', (c) => {
   const row = Number(c.req.param('row'));
@@ -93,6 +91,22 @@ app.get('/game/reset', (c) => {
   }
 
   return c.redirect(redirectUrl + '#minesweeper');
+});
+
+app.get('/mines/count', (c) => {
+  const image = minesweeper.getCounterImage(MINE_COUNT);
+  if (!image) return c.text('Counter image is not available.', 404);
+  c.header('Content-Type', 'image/svg+xml');
+  c.header('Cache-Control', 'max-age=0, no-cache, no-store, must-revalidate');
+  return c.body(image);
+});
+
+app.get('/timer', (c) => {
+  const image = minesweeper.getTimerImage();
+  if (!image) return c.text('Timer image is not available.', 404);
+  c.header('Content-Type', 'image/svg+xml');
+  c.header('Cache-Control', 'max-age=0, no-cache, no-store, must-revalidate');
+  return c.body(image);
 });
 
 Deno.serve(app.fetch);

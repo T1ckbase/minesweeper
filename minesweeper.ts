@@ -23,7 +23,9 @@ export type ImageKey =
   | 'mine_hit' // mine-red.svg (for the mine that was clicked and caused loss)
   | 'status_playing' // emoji-smile.svg
   | 'status_won' // emoji-sunglasses.svg
-  | 'status_lost'; // emoji-dead.svg
+  | 'status_lost' // emoji-dead.svg
+  | 'counter' // counter.svg
+  | 'timer'; // timer.svg
 
 export class Minesweeper {
   // deno-fmt-ignore
@@ -48,6 +50,9 @@ export class Minesweeper {
   // Store loaded images
   private imageCache: Map<ImageKey, Uint8Array>;
   private imageDirectory: string;
+
+  private decoder = new TextDecoder('utf-8');
+  private encoder = new TextEncoder();
 
   constructor(rows: number, cols: number, mineCount: number, imageDirectory: string = './image') {
     // Validate input parameters
@@ -94,6 +99,8 @@ export class Minesweeper {
       status_playing: 'emoji-surprise-smile.svg',
       status_won: 'emoji-sunglasses.svg',
       status_lost: 'emoji-dead.svg',
+      counter: 'counter.svg',
+      timer: 'timer.svg',
     };
   }
 
@@ -110,7 +117,7 @@ export class Minesweeper {
         const filePath = path.join(this.imageDirectory, fileName); // Use path.join for cross-platform compatibility
         try {
           const fileBuffer = Deno.readFileSync(filePath);
-          this.imageCache.set(typedKey, new Uint8Array(fileBuffer)); // Deno.readFileSync returns a Buffer, which is a Uint8Array
+          this.imageCache.set(typedKey, fileBuffer); // Deno.readFileSync returns a Buffer, which is a Uint8Array
           // console.log(`Loaded image: ${filePath} for key: ${typedKey}`);
         } catch (error) {
           console.error(`Failed to load image ${filePath} for key ${typedKey}:`, error);
@@ -373,5 +380,23 @@ export class Minesweeper {
       default:
         return this.imageCache.get('status_playing'); // Fallback
     }
+  }
+
+  public getCounterImage(count: number): Uint8Array | undefined {
+    const image = this.imageCache.get('counter');
+    if (!image) return;
+    const decodedImage = this.decoder.decode(image);
+    const newImage = decodedImage.replace('--count: 0;', `--count: ${count};`);
+    return this.encoder.encode(newImage);
+  }
+
+  public getTimerImage(): Uint8Array | undefined {
+    const seconds = Math.floor(((this.gameState === 'playing' ? Date.now() : +this.endTime!) - +this.startTime) / 1000);
+    if (this.gameState !== 'playing') return this.getCounterImage(seconds);
+    const image = this.imageCache.get('timer');
+    if (!image) return;
+    const decodedImage = this.decoder.decode(image);
+    const newImage = decodedImage.replace('animation: timer 1000s linear infinite;', `animation: timer 1000s linear infinite -${seconds}s;`);
+    return this.encoder.encode(newImage);
   }
 }
