@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "start": "deno --allow-net --allow-read --allow-env --env-file=.env --watch main.ts"
+    "start": "deno --allow-net --allow-read --allow-env --env-file=.env --unstable-cron --watch main.ts"
   },
   "imports": {
     "@std/async": "jsr:@std/async@^1.0.12",
