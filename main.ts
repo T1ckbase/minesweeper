@@ -1,9 +1,7 @@
 import { Hono } from 'hono';
-// import { logger } from 'hono/logger';
+import { logger } from 'hono/logger';
 import { Minesweeper } from './minesweeper.ts';
 import { isGithubUserPath } from './utils.ts';
-
-// https://t1ckbase-minesweeper.hf.space
 
 const USER = 'T1ckbase';
 
@@ -11,8 +9,6 @@ const MINE_COUNT = 10;
 const minesweeper = new Minesweeper(8, 8, MINE_COUNT, './images');
 
 const app = new Hono();
-
-// app.use(logger());
 
 app.get('/', (c) => c.text(`Play minesweeper:\nhttps://github.com/${USER}`));
 
@@ -36,7 +32,7 @@ app.get('/cell/:row/:col/image', (c) => {
   return c.body(cellImage);
 });
 
-app.get('/cell/:row/:col/click', (c) => {
+app.get('/cell/:row/:col/click', logger(), (c) => {
   const row = Number(c.req.param('row'));
   const col = Number(c.req.param('col'));
   if (Number.isNaN(row) || Number.isNaN(col)) return c.text('Invalid coordinates', 400);
@@ -69,7 +65,7 @@ app.get('/game/status', (c) => {
   return c.body(image);
 });
 
-app.get('/game/reset', (c) => {
+app.get('/game/reset', logger(), (c) => {
   const referer = c.req.header('Referer');
   let redirectUrl = `https://github.com/${USER}`;
   if (referer) {
