@@ -96,6 +96,6 @@ app.get('/game/reset', (c) => {
 
 Deno.serve(app.fetch);
 
-Deno.cron('keep alive?', '0 0 * * *', async () => {
+Deno.cron('keep alive', '0 0 * * *', async () => { // keep alive?
   await fetch('https://t1ckbase-minesweeper.hf.space');
 });
