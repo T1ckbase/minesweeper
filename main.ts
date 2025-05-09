@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { logger } from 'hono/logger';
+// import { logger } from 'hono/logger';
 import { Minesweeper } from './minesweeper.ts';
 import { isGithubUserPath } from './utils.ts';
 
@@ -13,7 +13,7 @@ const minesweeper = new Minesweeper(8, 8, 10, './images');
 
 const app = new Hono();
 
-app.use(logger());
+// app.use(logger());
 
 app.get('/', (c) => c.text(`Play minesweeper:\nhttps://github.com/${USER}`));
 
@@ -58,7 +58,7 @@ app.get('/cell/:row/:col/click', (c) => {
 
   minesweeper.revealCell(row, col);
 
-  return c.redirect(redirectUrl);
+  return c.redirect(redirectUrl + '#minesweeper');
 });
 
 app.get('/game/status', (c) => {
@@ -91,7 +91,7 @@ app.get('/game/reset', (c) => {
     console.warn(e instanceof Error ? e.message : e);
   }
 
-  return c.redirect(redirectUrl);
+  return c.redirect(redirectUrl + '#minesweeper');
 });
 
 Deno.serve(app.fetch);
