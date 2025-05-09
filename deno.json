@@ -1,9 +1,10 @@
 {
   "tasks": {
-    "start": "deno --allow-net --watch main.ts"
+    "start": "deno --allow-net --allow-read --allow-env --env-file=.env --watch main.ts"
   },
   "imports": {
     "@std/async": "jsr:@std/async@^1.0.12",
+    "@std/path": "jsr:@std/path@^1.0.9",
     "hono": "jsr:@hono/hono@^4.7.8"
   },
   "fmt": {
