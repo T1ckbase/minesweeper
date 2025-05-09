@@ -1,9 +1,8 @@
 import { Hono } from 'hono';
 // import { logger } from 'hono/logger';
+import { serveStatic } from 'hono/deno';
 import { Minesweeper } from './minesweeper.ts';
 import { isGithubUserPath } from './utils.ts';
-
-// TODO: check header referer
 
 // https://t1ckbase-minesweeper.hf.space
 
@@ -23,6 +22,8 @@ if (Deno.env.get('DENO_ENV') === 'development') {
   // app.get('/board', (c) => c.text(JSON.stringify(minesweeper.getBoard(), null, 2)));
   app.get('/board', (c) => c.text(minesweeper.getBoard().map((row) => row.map((cell) => cell.isMine ? 'b' : cell.adjacentMines).join('')).join('\n')));
 }
+
+app.use('/mines/count', serveStatic({ path: './images/counter.svg' }));
 
 app.get('/cell/:row/:col/image', (c) => {
   const row = Number(c.req.param('row'));
