@@ -33,7 +33,7 @@ app.get('/cell/:row/:col/image', (c) => {
   if (!cellImage) return c.text(`Not Found: Image for cell (${row}, ${col}) could not be found. Coordinates may be invalid or no image is defined for this cell state.`, 404);
 
   c.header('Content-Type', 'image/svg+xml');
-  c.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+  c.header('Cache-Control', 'max-age=0, no-cache, no-store, must-revalidate');
   return c.body(cellImage);
 });
 
@@ -66,7 +66,7 @@ app.get('/game/status', (c) => {
   if (!image) return c.text('Status image is not available.', 404);
 
   c.header('Content-Type', 'image/svg+xml');
-  c.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+  c.header('Cache-Control', 'max-age=0, no-cache, no-store, must-revalidate');
   return c.body(image);
 });
 
