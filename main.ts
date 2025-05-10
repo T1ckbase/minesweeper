@@ -10,6 +10,21 @@ const minesweeper = new Minesweeper(8, 8, MINE_COUNT, './images');
 
 const app = new Hono();
 
+const customLogger = (message: string, ...rest: string[]) => {
+  const timestamp = new Intl.DateTimeFormat('sv-SE', {
+    timeZone: 'Asia/Taipei',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  })
+    .format(new Date());
+  console.log(`[${timestamp}] ${message}`, ...rest);
+};
+
 app.get('/', (c) => c.text(`Play minesweeper:\nhttps://github.com/${USER}`));
 
 app.get('/headers', (c) => c.text(Array.from(c.req.raw.headers).join('\n')));
@@ -32,7 +47,7 @@ app.get('/cell/:row/:col/image', (c) => {
   return c.body(cellImage);
 });
 
-app.get('/cell/:row/:col/click', logger(), (c) => {
+app.get('/cell/:row/:col/click', logger(customLogger), (c) => {
   const row = Number(c.req.param('row'));
   const col = Number(c.req.param('col'));
   if (Number.isNaN(row) || Number.isNaN(col)) return c.text('Invalid coordinates', 400);
@@ -65,7 +80,7 @@ app.get('/game/status', (c) => {
   return c.body(image);
 });
 
-app.get('/game/reset', logger(), (c) => {
+app.get('/game/reset', logger(customLogger), (c) => {
   const referer = c.req.header('Referer');
   let redirectUrl = `https://github.com/${USER}`;
   if (referer) {
